@@ -42,22 +42,30 @@ def getCompletedStories(t):
             print (name, time)
     print("Finished stories")
 
-def setTimeFile(t):
+def setTimeFile():
+    print("Entering Main")
+    t = datetime.datetime.now().isoformat()
+    t = t[:-2] + "Z"    
     with open("lastrun.txt", mode="w+") as file:
         file.write("%s" % t)
+
+def getTimeFile():
+    print ("retrieving last run date")
+    with open("lastrun.txt", mode="r") as file:
+        lastrun = file.read().replace('\n', '')
+    print lastrun
+    return lastrun
 
 def main(args):
     global rally
 
-    print("Entering Main")
-    t = datetime.datetime.now().isoformat()
-    t = t[:-2] + "Z"
-
-    setTimeFile(t)
+    #setTimeFile()
+    lastrun = getTimeFile()
     rally = Rally('rally1.rallydev.com', 'thomas.mcquitty@integrations.acme.com', 'Kanban!!', workspace='thomas.mcquitty@ca.com-2017-05-May', project='Shopping Team')
     print("logged in")
 
-    getCompletedStories(t)
+    
+    getCompletedStories(lastrun)
 
 
 if __name__ == '__main__':
