@@ -53,7 +53,7 @@ def getTimeFile():
     print ("retrieving last run date")
     with open("lastrun.txt", mode="r") as file:
         lastrun = file.read().replace('\n', '')
-    print lastrun
+    print(lastrun)
     return lastrun
 
 def main(args):
