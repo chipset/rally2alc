@@ -70,7 +70,6 @@ def main(args):
     rally = Rally('rally1.rallydev.com', 'thomas.mcquitty@integrations.acme.com', 'Kanban!!', workspace='thomas.mcquitty@ca.com-2017-05-May', project='Shopping Team')
     print("logged in")
 
-    
     getCompletedStories(lastrun)
 
 
