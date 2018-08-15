@@ -17,9 +17,8 @@ from pyral import Rally, rallyWorkset
 global pidfile
 global rally
 
-def postWebhook(USFormattedID):
+def postWebhook(payload):
     webhook_url = "http://alc.ngrok.io/rest/eventhook?apikey=5ab1a313-af93-44e2-9e71-8dba6fd45b95&processorid=6000117"
-    payload = {'FormattedID': USFormattedID}
 
     response = requests.post(
         webhook_url, data=json.dumps(payload),
@@ -39,12 +38,15 @@ def getCompletedStories(t):
     fields ="Name,Owner,State,FormattedID,oid,ScheduleState,Expedite"  #add bypass sonarqube
     search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
     print (search_criteria)
-    collection = rally.get('Story', query=search_criteria)
+    collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
         print("error")
         sys.exit(1)
     if not collection.errors:
+        content = collection.content
+        for userStory in content["QueryResult"]["Results"]:
+            postWebhook(userStory)
         for story in collection:
             name = '%s' % story.FormattedID
             time = '%s' % story.LastUpdateDate
