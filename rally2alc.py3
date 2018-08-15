@@ -55,7 +55,6 @@ def getCompletedStories(t):
             time = '%s' % story.LastUpdateDate
             usList.add(name)
             print (name, time)
-            postWebhook(name)
 
     writePreviouslyProcessedUserStores(usList)
     print("Finished stories")
