@@ -47,7 +47,7 @@ def setTimeFile():
     t = datetime.datetime.now().isoformat()
     t = t[:-2] + "Z"    
     with open("lastrun.txt", mode="w+") as file:
-        file.write("%s" % lastrun)
+        file.write("%s" % t)
 
 def getTimeFile():
     print ("retrieving last run date")
