@@ -48,7 +48,8 @@ def getCompletedStories(t):
             usList.add(name)
             print (name, time)
             postWebhook(name)
-
+            print(story)
+            print(details)
     writePreviouslyProcessedUserStores(usList)
     print("Finished stories")
 
