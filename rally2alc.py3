@@ -28,8 +28,7 @@ def getCompletedStories(t):
 
     print("Getting stories")
     fields ="Name,Owner,State,FormattedID,oid,ScheduleState,Expedite"  #add bypass sonarqube
-    #search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
-    search_criteria = 'ScheduleState = Completed'
+    search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
     print (search_criteria)
     collection = rally.get('Story', query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
@@ -57,10 +56,14 @@ def getTimeFile():
     print(lastrun)
     return lastrun
 
+def printTime():
+    t = datetime.datetime.now().isoformat()
+    t = t[:-2] + "Z"    
+    print("Current time is : %s" % t)
+
 def main(args):
     global rally
 
-    #setTimeFile()
     lastrun = getTimeFile()
     rally = Rally('rally1.rallydev.com', 'thomas.mcquitty@integrations.acme.com', 'Kanban!!', workspace='thomas.mcquitty@ca.com-2017-05-May', project='Shopping Team')
     print("logged in")
