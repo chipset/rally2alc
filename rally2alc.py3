@@ -49,7 +49,7 @@ def main(args):
     global rally
 
     print("Entering Main")
-    t = datetime.datetime.now().isformat()
+    t = datetime.datetime.now().isoformat()
     t = t[:-2] + "Z"
 
     setTimeFile(t)
