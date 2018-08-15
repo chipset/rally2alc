@@ -27,6 +27,9 @@ def postWebhook(USFormattedID):
     )
     if response.status_code != 200:
         print("Error connecting to ALC")
+    else:
+        print("fired webhook")
+
 
 def getCompletedStories(t):
     global rally
@@ -48,8 +51,7 @@ def getCompletedStories(t):
             usList.add(name)
             print (name, time)
             postWebhook(name)
-            print(json.dumps(story.__dict__))
-            print(story)
+
     writePreviouslyProcessedUserStores(usList)
     print("Finished stories")
 
