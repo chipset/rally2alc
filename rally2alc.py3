@@ -36,8 +36,8 @@ def getCompletedStories():
         sys.exit(1)
     if not collection.errors:
         for story in collection:
-            name = '%s' % story.Name
-            print("%s", name)
+            name = '%s' % story.FormattedID
+            print( name)
 
     print("Finished stories")
 
