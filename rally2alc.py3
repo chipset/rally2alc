@@ -38,6 +38,7 @@ def getCompletedStories():
         for story in collection:
             name = '%s' % story.FormattedID
             time = '%s' % story.LastUpdateDate
+            print (name, time)
     print("Finished stories")
 
 def main(args):
