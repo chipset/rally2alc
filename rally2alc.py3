@@ -8,6 +8,7 @@ import re
 import time
 import json
 import logging
+import requests
 
 #from ConfigParser import SafeConfigParser
 from pyral import Rally, rallyWorkset
@@ -16,11 +17,16 @@ from pyral import Rally, rallyWorkset
 global pidfile
 global rally
 
-def create_pid():
-    pass
+def postWebhook(USFormattedID):
+    webhook_url = "http://alc.ngrok.io/rest/eventhook?apikey=5ab1a313-af93-44e2-9e71-8dba6fd45b95&processorid=6000117"
+    payload = {'FormattedID': USFormattedID}
 
-def close_pid():
-    pass
+    response = requests.post(
+        webhook_url, data=json.dumps(payload),
+        headers= {'Content-type':'application/json'}
+    )
+    if response.status_code != 200:
+        print("Error connecting to ALC")
 
 def getCompletedStories(t):
     global rally
@@ -41,6 +47,7 @@ def getCompletedStories(t):
             time = '%s' % story.LastUpdateDate
             usList.add(name)
             print (name, time)
+            postWebhook(name)
 
     writePreviouslyProcessedUserStores(usList)
     print("Finished stories")
@@ -66,7 +73,7 @@ def printTime():
     print("Current time is : %s" % t)
 
 def writePreviouslyProcessedUserStores(USList):
-    with open("UserStoreis.txt", mode="w+") as file:
+    with open("UserStories.txt", mode="w+") as file:
         for us in USList:
             file.write(us)
             file.write("\n")
