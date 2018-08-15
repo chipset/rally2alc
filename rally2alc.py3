@@ -46,6 +46,7 @@ def getCompletedStories(t):
     if not collection.errors:
         content = collection.content
         for userStory in content["QueryResult"]["Results"]:
+            print(userStory)
             postWebhook(userStory)
         for story in collection:
             name = '%s' % story.FormattedID
