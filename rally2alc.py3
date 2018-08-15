@@ -42,10 +42,10 @@ def getCompletedStories(t):
             print (name, time)
     print("Finished stories")
 
-def setTimeFile(lastrun):
+def setTimeFile():
     print("Entering Main")
-    #t = datetime.datetime.now().isoformat()
-    #t = t[:-2] + "Z"    
+    t = datetime.datetime.now().isoformat()
+    t = t[:-2] + "Z"    
     with open("lastrun.txt", mode="w+") as file:
         file.write("%s" % lastrun)
 
@@ -54,6 +54,7 @@ def getTimeFile():
     with open("lastrun.txt", mode="r") as file:
         lastrun = file.read().replace('\n', '')
     print(lastrun)
+    setTimeFile()
     return lastrun
 
 def printTime():
