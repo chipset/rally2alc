@@ -25,7 +25,7 @@ def close_pid():
 def getCompletedStories(t):
     global rally
     #error = False
-
+    usList = set()
     print("Getting stories")
     fields ="Name,Owner,State,FormattedID,oid,ScheduleState,Expedite"  #add bypass sonarqube
     search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
@@ -39,7 +39,10 @@ def getCompletedStories(t):
         for story in collection:
             name = '%s' % story.FormattedID
             time = '%s' % story.LastUpdateDate
+            usList.add(name)
             print (name, time)
+
+    writePreviouslyProcessedUserStores(usList)
     print("Finished stories")
 
 def setTimeFile():
@@ -61,6 +64,25 @@ def printTime():
     t = datetime.datetime.now().isoformat()
     t = t[:-2] + "Z"    
     print("Current time is : %s" % t)
+
+def writePreviouslyProcessedUserStores(USList):
+    with open("UserStoreis.txt", mode="w+") as file:
+        for us in USList:
+            file.write(us)
+            file.write("\n")
+
+def readPreviouslyProcessedUserStories():
+    previousUS = set()
+    with open("UserStories.txt", mode="r") as file:
+        line = file.read()
+        line = line.split()
+    for x in line:
+        previousUS.add(x)
+    
+    return previousUS
+
+def hasBeenProcessedUS():
+    pass
 
 def main(args):
     global rally
