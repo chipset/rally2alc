@@ -9,7 +9,7 @@ import time
 import json
 import logging
 
-from ConfigParser import SafeConfigParser
+#from ConfigParser import SafeConfigParser
 from pyral import Rally, rallyWorkset
 
 
