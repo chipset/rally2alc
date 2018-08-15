@@ -22,13 +22,13 @@ def create_pid():
 def close_pid():
     pass
 
-def getCompletedStories():
+def getCompletedStories(t):
     global rally
     #error = False
 
     print("Getting stories")
     fields ="Name,Owner,State,FormattedID,oid,ScheduleState,Expedite"  #add bypass sonarqube
-    search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "2018-07-20T00:00:00.000Z"))'
+    search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
     collection = rally.get('Story', query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
@@ -41,14 +41,22 @@ def getCompletedStories():
             print (name, time)
     print("Finished stories")
 
+def setTimeFile(t):
+    with open("lastrun.txt", mode="w+") as file:
+        file.write("%s" % t)
+
 def main(args):
     global rally
 
     print("Entering Main")
+    t = datetime.datetime.now().isformat()
+    t = t[:-2] + "Z"
+
+    setTimeFile(t)
     rally = Rally('rally1.rallydev.com', 'thomas.mcquitty@integrations.acme.com', 'Kanban!!', workspace='thomas.mcquitty@ca.com-2017-05-May', project='Shopping Team')
     print("logged in")
 
-    getCompletedStories()
+    getCompletedStories(t)
 
 
 if __name__ == '__main__':
