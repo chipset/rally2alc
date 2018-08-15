@@ -37,8 +37,7 @@ def getCompletedStories():
     if not collection.errors:
         for story in collection:
             name = '%s' % story.FormattedID
-            print( name)
-
+            time = '%s' % story.LastUpdateDate
     print("Finished stories")
 
 def main(args):
