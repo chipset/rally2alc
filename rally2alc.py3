@@ -32,7 +32,7 @@ def getCompletedStories():
     collection = rally.get('Story', query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
-        print "error"
+        print("error")
         sys.exit(1)
     if not collection.errors:
         for story in collection:
