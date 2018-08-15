@@ -28,7 +28,8 @@ def getCompletedStories(t):
 
     print("Getting stories")
     fields ="Name,Owner,State,FormattedID,oid,ScheduleState,Expedite"  #add bypass sonarqube
-    search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
+    #search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
+    search_criteria = 'ScheduleState = Completed'
     print (search_criteria)
     collection = rally.get('Story', query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
