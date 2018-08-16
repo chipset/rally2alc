@@ -22,7 +22,6 @@ def postWebhook(payload):
     webhook_url = "http://alc.ngrok.io/rest/eventhook?apikey=5ab1a313-af93-44e2-9e71-8dba6fd45b95&processorid=6000117"
     webhook_url = conf.endpoint
     response = requests.post(
-        #webhook_url, data=json.dumps(payload),
         webhook_url, data=json.dumps(payload),
         headers= {'Content-type':'application/json'}
     )
@@ -37,7 +36,9 @@ def getCompletedStories(search_criteria):
     #error = False
     usList = set()
     print("Getting stories")
-    fields ="Name,Owner,State,FormattedID,oid,ScheduleState,Expedite"  #add bypass sonarqube
+
+    # Read User Stories to determine if they've been previously processed -- TODO
+    prevProcessedUS = readPreviouslyProcessedUserStories()
 
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
@@ -48,13 +49,10 @@ def getCompletedStories(search_criteria):
         content = collection.content
         for userStory in content["QueryResult"]["Results"]:
             postWebhook(userStory)
-            print(userStory.FormattedID)
-        for story in collection:
-            name = '%s' % story.FormattedID
-            time = '%s' % story.LastUpdateDate
-            usList.add(name)
-            print (name, time)
+            print(userStory["FormattedID"], userStory[LastUpdateDate])
+            usList.add(userStory["FormattedID"])
 
+    # Writes processed stories so they aren't processed again
     writePreviouslyProcessedUserStores(usList)
     print("Finished stories")
 
@@ -113,6 +111,8 @@ def main(args):
     else:
         search_string = conf.query.format(lastrun)
 
+    print(conf.api)
+    print(conf.url)
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     print("logged in")
 
