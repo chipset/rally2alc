@@ -11,12 +11,12 @@ import logging
 import requests
 import getConfig
 import pytz
+import logging
 
 from pyral import Rally, rallyWorkset
-
-
-global pidfile
 global rally
+
+logging.basicConfig(filename="logs/rally2alc.log", level=logging.DEBUG)
 
 def postWebhook(payload):
     conf = getConfig.getConfig()
