@@ -147,7 +147,7 @@ def main(args):
     print("logged in")
 
     # Process Stories for Webhook
-    getCompletedStories(search_string)
+    getCompletedStories(conf.query.format(lastrun))
     
     # In some cases, the story will change state and you want the webhook to fire again.
     # We need to remove the US ID from the UserStory.txt file, as this is the list to skip
