@@ -48,6 +48,7 @@ def getCompletedStories(search_criteria):
         content = collection.content
         for userStory in content["QueryResult"]["Results"]:
             postWebhook(userStory)
+            print(userStory.FormattedID)
         for story in collection:
             name = '%s' % story.FormattedID
             time = '%s' % story.LastUpdateDate
@@ -107,14 +108,11 @@ def main(args):
     lastrun = getTimeFile()
     conf = getConfig.getConfig()
 
-
     if lastrun == "never":
         search_string = "ScheduleState = Completed"
     else:
         search_string = conf.query.format(lastrun)
 
-    print(search_string)
-    sys.exit(1)
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     print("logged in")
 
