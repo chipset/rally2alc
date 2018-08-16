@@ -1,5 +1,5 @@
 # rally2alc
-A project to find rally user stories and trigger webhook calls to ALC
+A project to find rally user stories and trigger webhook calls to ALC (or any other server, as the URL is configurable).
 
 Some companies have strict firewall considerations.  This was written to allow webhook like functionality from Agile Central/Rally
 to an aribritary server.  This is a basic implementation and only performs unauthenticated posts.
