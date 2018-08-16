@@ -138,7 +138,7 @@ def main(args):
         print("Setting up timefile.txt.  Program will exit.  Please restart it.")
         logging.debug("Could not find time file.  Exiting.")
         sys.exit(1)
-
+    print("Starting Rally2ALC...")
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     logging.debug("Logged into rally: {} Workspace: {} Project: {}".format(conf.url, conf.wksp, conf.proj))
 
@@ -155,6 +155,7 @@ def main(args):
         Cleanup(conf.cleanupquery.format(lastrun))
 
     setTimeFile()
+    print("Finished.")
 
 if __name__ == '__main__':
     main(sys.argv[1:])
