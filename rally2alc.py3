@@ -41,7 +41,7 @@ def getCompletedStories(search_criteria):
     # Read User Stories to determine if they've been previously processed -- TODO
     prevProcessedUS = readPreviouslyProcessedUserStories()
 
-    logging.debug("Search Criteria: {}".format(search_criteria)
+    logging.debug("Search Criteria: {}".format(search_criteria))
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
@@ -70,7 +70,7 @@ def getTimeFile():
         with open("lastrun.txt", mode="r") as file:
             lastrun = file.read().replace('\n', '')
         file.close()
-        logging.debug("Last run time from file: {}".format((lastrun))
+        logging.debug("Last run time from file: {}".format(lastrun))
     except Exception:
         return "never"
 
