@@ -10,6 +10,7 @@ import json
 import logging
 import requests
 import getConfig
+import pytz
 
 from pyral import Rally, rallyWorkset
 
@@ -40,6 +41,7 @@ def getCompletedStories(search_criteria):
     # Read User Stories to determine if they've been previously processed -- TODO
     prevProcessedUS = readPreviouslyProcessedUserStories()
 
+    print(search_criteria)
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
@@ -50,8 +52,10 @@ def getCompletedStories(search_criteria):
         for userStory in content["QueryResult"]["Results"]:
             if userStory["FormattedID"] not in prevProcessedUS:
                 postWebhook(userStory)
-                print(userStory["FormattedID"], userStory[LastUpdateDate])
+                print(userStory["FormattedID"], userStory["LastUpdateDate"], datetime.datetime.now())
                 usList.add(userStory["FormattedID"])
+            #else:
+            #    print("Not found {}".format(userStory["FormattedID"]))
 
     # Writes processed stories so they aren't processed again
     writePreviouslyProcessedUserStores(usList)
@@ -59,8 +63,8 @@ def getCompletedStories(search_criteria):
 
 def setTimeFile():
     print("Entering Main")
-    t = datetime.datetime.now().isoformat()
-    t = t[:-2] + "Z"    
+    t = datetime.datetime.now(pytz.timezone('UTC')).isoformat()
+    t = t[:-8] + "Z"    
     with open("lastrun.txt", mode="w+") as file:
         file.write("%s" % t)
 
@@ -77,12 +81,12 @@ def getTimeFile():
     return lastrun
 
 def printTime():
-    t = datetime.datetime.now().isoformat()
-    t = t[:-2] + "Z"    
+    t = datetime.datetime.now(pytz.timezone('UTC')).isoformat()
+    t = t[:-8] + "Z"    
     print("Current time is : %s" % t)
 
 def writePreviouslyProcessedUserStores(USList):
-    with open("UserStories.txt", mode="w+") as file:
+    with open("UserStories.txt", mode="a") as file:
         for us in USList:
             file.write(us)
             file.write("\n")
@@ -112,8 +116,6 @@ def main(args):
     else:
         search_string = conf.query.format(lastrun)
 
-    print(conf.api)
-    print(conf.url)
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     print("logged in")
 
