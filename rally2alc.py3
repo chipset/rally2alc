@@ -75,7 +75,7 @@ def getTimeFile():
             lastrun = file.read().replace('\n', '')
         file.close()
         print(lastrun)
-    except FileNotFoundError:
+    except Exception:
         return "never"
 
     return lastrun
@@ -86,15 +86,17 @@ def printTime():
     print("Current time is : %s" % t)
 
 def writePreviouslyProcessedUserStores(USList):
-    with open("UserStories.txt", mode="a") as file:
+    conf = getConfig.getConfig()
+    with open(conf.storylog, mode="a") as file:
         for us in USList:
             file.write(us)
             file.write("\n")
 
 def readPreviouslyProcessedUserStories():
     previousUS = set()
+    conf = getConfig.getConfig()
     try:
-        with open("UserStories.txt", mode="r") as file:
+        with open(conf.storylog, mode="r") as file:
             line = file.read()
             line = line.split()
         for x in line:
@@ -108,6 +110,7 @@ def Cleanup(search_criteria):
     # Debug, clean up after testing
     print(search_criteria)
     processedUserStories = readPreviouslyProcessedUserStories()
+    conf = getConfig.getConfig()
     
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
@@ -122,11 +125,10 @@ def Cleanup(search_criteria):
                 processedUserStories.remove(userStory["FormattedID"])
 
     # Overwrite previous Storage file
-    with open("UserStories.txt", mode="w") as file:
+    with open(conf.storylog, mode="w") as file:
         for us in processedUserStories:
             file.write(us)
             file.write("\n")
-
 
 def main(args):
     global rally
@@ -152,6 +154,7 @@ def main(args):
     # because the Rally API doesn't allow checking previous values.
     if conf.runcleanup:
         print("Processing Cleanup Routine")
+        # Call cleanup query with the last run time.
         Cleanup(conf.cleanupquery.format(lastrun))
 
 

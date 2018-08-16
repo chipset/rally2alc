@@ -26,4 +26,4 @@ class getConfig:
         section = "Rally2ALC"
         self.interval = int(conf.get(section, "Run Interval"))
         self.runcleanup = conf.getboolean(section, "Run Cleanup")
-        
+        self.storylog = conf.get(section, "Story Log Filename")        
