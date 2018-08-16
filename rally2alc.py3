@@ -20,16 +20,16 @@ logging.basicConfig(filename="logs/rally2alc.log", level=logging.DEBUG)
 
 def postWebhook(payload):
     conf = getConfig.getConfig()
-    webhook_url = "http://alc.ngrok.io/rest/eventhook?apikey=5ab1a313-af93-44e2-9e71-8dba6fd45b95&processorid=6000117"
     webhook_url = conf.endpoint
     response = requests.post(
         webhook_url, data=json.dumps(payload),
         headers= {'Content-type':'application/json'}
     )
     if response.status_code != 200:
-        print("Error connecting to ALC")
+        logging.debug("Error connecting to Webhook server Status Code: {}".format(response.status_code))
+        logging.debug("Error connecting to Webhook server Formatted ID: {}".format(payload["FormattedID"]))
     else:
-        print("fired webhook")
+        logging.debug("Successfully fired Webhook for {}".format(payload["FormattedID"]))
 
 
 def getCompletedStories(search_criteria):
