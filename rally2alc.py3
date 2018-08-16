@@ -9,8 +9,8 @@ import time
 import json
 import logging
 import requests
+import getConfig
 
-from ConfigParser import SafeConfigParser
 from pyral import Rally, rallyWorkset
 
 
@@ -110,7 +110,9 @@ def main(args):
 
     printTime()
     lastrun = getTimeFile()
-    rally = Rally('rally1.rallydev.com', 'thomas.mcquitty@integrations.acme.com', 'Kanban!!', workspace='thomas.mcquitty@ca.com-2017-05-May', project='Shopping Team')
+    conf = getConfig()
+
+    rally = Rally(conf.url, 'thomas.mcquitty@integrations.acme.com', 'Kanban!!', workspace='thomas.mcquitty@ca.com-2017-05-May', project='Shopping Team')
     print("logged in")
 
     getCompletedStories(lastrun)
