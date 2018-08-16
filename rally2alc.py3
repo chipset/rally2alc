@@ -48,7 +48,7 @@ def getCompletedStories(search_criteria):
     if not collection.errors:
         content = collection.content
         for userStory in content["QueryResult"]["Results"]:
-            if userStory not in prevProcessedUS:
+            if userStory["FormattedID"] not in prevProcessedUS:
                 postWebhook(userStory)
                 print(userStory["FormattedID"], userStory[LastUpdateDate])
                 usList.add(userStory["FormattedID"])
