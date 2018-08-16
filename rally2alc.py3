@@ -99,9 +99,9 @@ def readPreviouslyProcessedUserStories():
             line = line.split()
         for x in line:
             previousUS.add(x)
-    except Exception, details:
+    except Exception:
         return previousUS
-        
+
     return previousUS
 
 def hasBeenProcessedUS():
