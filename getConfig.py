@@ -18,5 +18,12 @@ class getConfig:
         self.wksp = conf.get(section, "Workspace")
         self.proj = conf.get(section, "Project")
         self.query = conf.get(section, "Query")
+        self.cleanupquery = conf.get(section, "Cleanup Query")
+
         section = "ALC"
         self.endpoint = conf.get(section, "Endpoint")
+
+        section = "Rally2ALC"
+        self.interval = int(conf.get(section, "Run Interval"))
+        self.runcleanup = conf.getboolean(section, "Run Cleanup")
+        

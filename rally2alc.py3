@@ -104,8 +104,29 @@ def readPreviouslyProcessedUserStories():
 
     return previousUS
 
-def hasBeenProcessedUS():
-    pass
+def Cleanup(search_criteria):
+    # Debug, clean up after testing
+    print(search_criteria)
+    processedUserStories = readPreviouslyProcessedUserStories()
+    
+    collection = rally.get('Story', fetch=True, query=search_criteria)
+    assert collection.__class__.__name__ == 'RallyRESTResponse'
+    if collection.errors:
+        print("error")
+        sys.exit(1)
+    if not collection.errors:
+        content = collection.content
+        for userStory in content["QueryResult"]["Results"]:
+            if userStory["FormattedID"] in processedUserStories:
+                print(userStory["FormattedID"], userStory["LastUpdateDate"])
+                processedUserStories.remove(userStory["FormattedID"])
+
+    # Overwrite previous Storage file
+    with open("UserStories.txt", mode="w") as file:
+        for us in processedUserStories:
+            file.write(us)
+            file.write("\n")
+
 
 def main(args):
     global rally
@@ -122,7 +143,20 @@ def main(args):
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     print("logged in")
 
+    # Process Stories for Webhook
     getCompletedStories(search_string)
+    
+    # In some cases, the story will change state and you want the webhook to fire again.
+    # We need to remove the US ID from the UserStory.txt file, as this is the list to skip
+    # This prevents the webhook from firing if a field is updated but the status hasn't changed
+    # because the Rally API doesn't allow checking previous values.
+    if conf.runcleanup:
+        print("Processing Cleanup Routine")
+        Cleanup(conf.cleanupquery.format(lastrun))
+
+
+
+
     setTimeFile()
 
 if __name__ == '__main__':
