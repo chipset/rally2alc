@@ -10,7 +10,7 @@ import json
 import logging
 import requests
 
-#from ConfigParser import SafeConfigParser
+from ConfigParser import SafeConfigParser
 from pyral import Rally, rallyWorkset
 
 
