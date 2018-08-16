@@ -36,7 +36,7 @@ def getCompletedStories(search_criteria):
     global rally
     #error = False
     usList = set()
-    print("Getting stories")
+    logging.info("Getting list of completed stories.")
 
     # Read User Stories to determine if they've been previously processed -- TODO
     prevProcessedUS = readPreviouslyProcessedUserStories()
@@ -45,24 +45,21 @@ def getCompletedStories(search_criteria):
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
-        print("error processing")
+        logging.debug("Error processing Completed Stories")
         sys.exit(1)
     if not collection.errors:
         content = collection.content
         for userStory in content["QueryResult"]["Results"]:
             if userStory["FormattedID"] not in prevProcessedUS:
                 postWebhook(userStory)
-                print(userStory["FormattedID"], userStory["LastUpdateDate"], datetime.datetime.now())
+                logging.info("Processing {}, which was last updated on {}".fomrat(userStory["FormattedID"], userStory["LastUpdateDate"]))
                 usList.add(userStory["FormattedID"])
-            #else:
-            #    print("Not found {}".format(userStory["FormattedID"]))
 
     # Writes processed stories so they aren't processed again
     writePreviouslyProcessedUserStores(usList)
-    print("Finished stories")
+    logging.info("Finished processing stories")
 
 def setTimeFile():
-    print("Entering Main")
     t = datetime.datetime.now(pytz.timezone('UTC')).isoformat()
     t = t[:-8] + "Z"    
     with open("lastrun.txt", mode="w+") as file:
@@ -70,7 +67,6 @@ def setTimeFile():
 
 def getTimeFile():
     try:
-        print ("retrieving last run date")
         with open("lastrun.txt", mode="r") as file:
             lastrun = file.read().replace('\n', '')
         file.close()
@@ -83,7 +79,6 @@ def getTimeFile():
 def printTime():
     t = datetime.datetime.now(pytz.timezone('UTC')).isoformat()
     t = t[:-8] + "Z"    
-    print("Current time is : %s" % t)
 
 def writePreviouslyProcessedUserStores(USList):
     conf = getConfig.getConfig()
@@ -108,20 +103,20 @@ def readPreviouslyProcessedUserStories():
 
 def Cleanup(search_criteria):
     # Debug, clean up after testing
-    print(search_criteria)
+    logging.debug("Searching clenaup routine. Search Criteria is: {}".format(search_criteria))
     processedUserStories = readPreviouslyProcessedUserStories()
     conf = getConfig.getConfig()
     
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
-        print("Error Proccessing Cleanup")
+        logging.debug("Error Proccessing Cleanup Routine")
         sys.exit(1)
     if not collection.errors:
         content = collection.content
         for userStory in content["QueryResult"]["Results"]:
             if userStory["FormattedID"] in processedUserStories:
-                print(userStory["FormattedID"], userStory["LastUpdateDate"])
+                logging.debug("Found {}.  It will be removed from processed story file.".format(userStory["FormattedID"]))
                 processedUserStories.remove(userStory["FormattedID"])
 
     # Overwrite previous Storage file
@@ -141,10 +136,11 @@ def main(args):
         setTimeFile()
         print("This is the first time this has run (or the timefile.txt is missing.")
         print("Setting up timefile.txt.  Program will exit.  Please restart it.")
+        logging.debug("Could not find time file.  Exiting.")
         sys.exit(1)
 
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
-    print("logged in")
+    logging.debug("Logged into rally: {} Workspace: {} Project: {}".format(conf.url, conf.wksp, conf.proj))
 
     # Process Stories for Webhook
     getCompletedStories(conf.query.format(lastrun))
@@ -154,7 +150,7 @@ def main(args):
     # This prevents the webhook from firing if a field is updated but the status hasn't changed
     # because the Rally API doesn't allow checking previous values.
     if conf.runcleanup and lastrun != "never":
-        print("Processing Cleanup Routine")
+        logging.debug("Processing cleanup routine")
         # Call cleanup query with the last run time.
         Cleanup(conf.cleanupquery.format(lastrun))
 
