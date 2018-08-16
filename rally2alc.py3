@@ -114,7 +114,7 @@ def main(args):
     conf = getConfig.getConfig()
 
     test_str = conf.query.format(lastrun)
-    print test_str
+    print(test_str)
     sys.exit(1)
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     print("logged in")
