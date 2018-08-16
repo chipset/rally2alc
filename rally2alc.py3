@@ -32,19 +32,13 @@ def postWebhook(payload):
         print("fired webhook")
 
 
-def getCompletedStories(t):
+def getCompletedStories(search_criteria):
     global rally
     #error = False
     usList = set()
     print("Getting stories")
     fields ="Name,Owner,State,FormattedID,oid,ScheduleState,Expedite"  #add bypass sonarqube
 
-    if t == "never":
-        search_criteria = 'ScheduleState = Completed'
-    else:
-        search_criteria =  ""
-        
-    print (search_criteria)
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
@@ -113,13 +107,18 @@ def main(args):
     lastrun = getTimeFile()
     conf = getConfig.getConfig()
 
-    test_str = conf.query.format(lastrun)
-    print(test_str)
+
+    if lastrun == "never":
+        search_string = "ScheduleState = Completed"
+    else:
+        search_string = conf.query.format(lastrun)
+
+    print(search_string)
     sys.exit(1)
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     print("logged in")
 
-    getCompletedStories(lastrun)
+    getCompletedStories(search_string)
     setTimeFile()
 
 if __name__ == '__main__':

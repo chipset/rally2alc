@@ -18,3 +18,5 @@ class getConfig:
         self.wksp = conf.get(section, "Workspace")
         self.proj = conf.get(section, "Project")
         self.query = conf.get(section, "Query")
+        section = "ALC"
+        self.endpoint = conf.get(section, "Endpoint")
