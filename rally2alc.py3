@@ -93,12 +93,12 @@ def writePreviouslyProcessedUserStores(USList):
 
 def readPreviouslyProcessedUserStories():
     previousUS = set()
-    with open("UserStories.txt", mode="r") as file:
-        line = file.read()
-        line = line.split()
-    for x in line:
-        previousUS.add(x)
-    
+    try:
+        with open("UserStories.txt", mode="r") as file:
+            line = file.read()
+            line = line.split()
+        for x in line:
+            previousUS.add(x)
     return previousUS
 
 def hasBeenProcessedUS():
