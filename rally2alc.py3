@@ -13,6 +13,7 @@ import getConfig
 import pytz
 import logging
 
+
 from pyral import Rally, rallyWorkset
 global rally
 
@@ -157,10 +158,10 @@ def loop():
 def main(args):
     print ("Starting Rally2ALC")
     conf = getConfig.getConfig()
-    while true:
+    while True:
         loop()
-        sleep(conf.interval * 60)
-        
+        time.sleep(conf.interval * 60)
+
     print("Finished Processing")
 
 if __name__ == '__main__':
