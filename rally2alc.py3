@@ -18,8 +18,9 @@ global pidfile
 global rally
 
 def postWebhook(payload):
+    conf = getConfig.getConfig()
     webhook_url = "http://alc.ngrok.io/rest/eventhook?apikey=5ab1a313-af93-44e2-9e71-8dba6fd45b95&processorid=6000117"
-
+    webhook_url = conf.endpoint
     response = requests.post(
         #webhook_url, data=json.dumps(payload),
         webhook_url, data=json.dumps(payload),
@@ -41,7 +42,7 @@ def getCompletedStories(t):
     if t == "never":
         search_criteria = 'ScheduleState = Completed'
     else:
-        search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
+        search_criteria =  ""
         
     print (search_criteria)
     collection = rally.get('Story', fetch=True, query=search_criteria)
@@ -112,7 +113,10 @@ def main(args):
     lastrun = getTimeFile()
     conf = getConfig.getConfig()
 
-    rally = Rally(conf.url, 'thomas.mcquitty@integrations.acme.com', 'Kanban!!', workspace='thomas.mcquitty@ca.com-2017-05-May', project='Shopping Team')
+    test_str = conf.query.format(lastrun)
+    print test_str
+    sys.exit(1)
+    rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     print("logged in")
 
     getCompletedStories(lastrun)
