@@ -152,7 +152,7 @@ def main(args):
     # We need to remove the US ID from the UserStory.txt file, as this is the list to skip
     # This prevents the webhook from firing if a field is updated but the status hasn't changed
     # because the Rally API doesn't allow checking previous values.
-    if conf.runcleanup:
+    if conf.runcleanup and lastrun != "never":
         print("Processing Cleanup Routine")
         # Call cleanup query with the last run time.
         Cleanup(conf.cleanupquery.format(lastrun))
