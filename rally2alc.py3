@@ -48,9 +48,10 @@ def getCompletedStories(search_criteria):
     if not collection.errors:
         content = collection.content
         for userStory in content["QueryResult"]["Results"]:
-            postWebhook(userStory)
-            print(userStory["FormattedID"], userStory[LastUpdateDate])
-            usList.add(userStory["FormattedID"])
+            if userStory not in prevProcessedUS:
+                postWebhook(userStory)
+                print(userStory["FormattedID"], userStory[LastUpdateDate])
+                usList.add(userStory["FormattedID"])
 
     # Writes processed stories so they aren't processed again
     writePreviouslyProcessedUserStores(usList)
