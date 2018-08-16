@@ -20,7 +20,6 @@ global rally
 def postWebhook(payload):
     webhook_url = "http://alc.ngrok.io/rest/eventhook?apikey=5ab1a313-af93-44e2-9e71-8dba6fd45b95&processorid=6000117"
 
-    print("%s" % json.dumps(payload))
     response = requests.post(
         #webhook_url, data=json.dumps(payload),
         webhook_url, data=json.dumps(payload),
