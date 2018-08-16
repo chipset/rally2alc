@@ -9,7 +9,7 @@ class getConfig:
         try:
             conf = configparser.ConfigParser()
             conf.read('config.ini')
-        except FileNotFound:
+        except Exception:
             print("Config File not found.  Set config file and try again")
             sys.exit(1)
         section = "Rally"

@@ -45,7 +45,7 @@ def getCompletedStories(search_criteria):
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
-        print("error")
+        print("error processing")
         sys.exit(1)
     if not collection.errors:
         content = collection.content
@@ -115,7 +115,7 @@ def Cleanup(search_criteria):
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
     if collection.errors:
-        print("error")
+        print("Error Proccessing Cleanup")
         sys.exit(1)
     if not collection.errors:
         content = collection.content
