@@ -138,9 +138,10 @@ def main(args):
     conf = getConfig.getConfig()
 
     if lastrun == "never":
-        search_string = "ScheduleState = Completed"
-    else:
-        search_string = conf.query.format(lastrun)
+        setTimeFile()
+        print("This is the first time this has run (or the timefile.txt is missing.")
+        print("Setting up timefile.txt.  Program will exit.  Please restart it.")
+        sys.exit(1)
 
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     print("logged in")
@@ -156,9 +157,6 @@ def main(args):
         print("Processing Cleanup Routine")
         # Call cleanup query with the last run time.
         Cleanup(conf.cleanupquery.format(lastrun))
-
-
-
 
     setTimeFile()
 
