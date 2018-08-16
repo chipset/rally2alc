@@ -38,7 +38,12 @@ def getCompletedStories(t):
     usList = set()
     print("Getting stories")
     fields ="Name,Owner,State,FormattedID,oid,ScheduleState,Expedite"  #add bypass sonarqube
-    search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
+
+    if t == "never":
+        search_criteria = 'ScheduleState = Completed'
+    else:
+        search_criteria = '((ScheduleState = Completed) AND (LastUpdateDate > "%s"))' % t
+        
     print (search_criteria)
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
@@ -67,11 +72,15 @@ def setTimeFile():
         file.write("%s" % t)
 
 def getTimeFile():
-    print ("retrieving last run date")
-    with open("lastrun.txt", mode="r") as file:
-        lastrun = file.read().replace('\n', '')
-    file.close()
-    print(lastrun)
+    try:
+        print ("retrieving last run date")
+        with open("lastrun.txt", mode="r") as file:
+            lastrun = file.read().replace('\n', '')
+        file.close()
+        print(lastrun)
+    except FileNotFoundError:
+        return "never"
+
     return lastrun
 
 def printTime():
