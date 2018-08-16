@@ -52,7 +52,7 @@ def getCompletedStories(search_criteria):
         for userStory in content["QueryResult"]["Results"]:
             if userStory["FormattedID"] not in prevProcessedUS:
                 postWebhook(userStory)
-                logging.info("Processing {}, which was last updated on {}".fomrat(userStory["FormattedID"], userStory["LastUpdateDate"]))
+                logging.info("Processing {}, which was last updated on {}".format(userStory["FormattedID"], userStory["LastUpdateDate"]))
                 usList.add(userStory["FormattedID"])
 
     # Writes processed stories so they aren't processed again
