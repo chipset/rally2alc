@@ -125,9 +125,8 @@ def Cleanup(search_criteria):
             file.write(us)
             file.write("\n")
 
-def main(args):
+def loop():
     global rally
-
     printTime()
     lastrun = getTimeFile()
     conf = getConfig.getConfig()
@@ -138,7 +137,6 @@ def main(args):
         print("Setting up timefile.txt.  Program will exit.  Please restart it.")
         logging.debug("Could not find time file.  Exiting.")
         sys.exit(1)
-    print("Starting Rally2ALC...")
     rally = Rally(conf.url, apikey=conf.api, workspace=conf.wksp, project=conf.proj)
     logging.debug("Logged into rally: {} Workspace: {} Project: {}".format(conf.url, conf.wksp, conf.proj))
 
@@ -155,7 +153,15 @@ def main(args):
         Cleanup(conf.cleanupquery.format(lastrun))
 
     setTimeFile()
-    print("Finished.")
+
+def main(args):
+    print ("Starting Rally2ALC")
+    conf = getConfig.getConfig()
+    while true:
+        loop()
+        sleep(conf.interval * 60)
+        
+    print("Finished Processing")
 
 if __name__ == '__main__':
     main(sys.argv[1:])
