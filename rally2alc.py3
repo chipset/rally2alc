@@ -17,7 +17,8 @@ import logging
 from pyral import Rally, rallyWorkset
 global rally
 
-logging.basicConfig(filename="logs/rally2alc.log", level=logging.DEBUG)
+print("Log filename {}".format(getConfig.getConfig().logfile))
+logging.basicConfig(filename=getConfig.getConfig().logfile, level=logging.DEBUG)
 
 def postWebhook(payload):
     conf = getConfig.getConfig()
@@ -63,12 +64,12 @@ def getCompletedStories(search_criteria):
 def setTimeFile():
     t = datetime.datetime.now(pytz.timezone('UTC')).isoformat()
     t = t[:-8] + "Z"    
-    with open("lastrun.txt", mode="w+") as file:
+    with open(getConfig.getConfig().lastrun, mode="w+") as file:
         file.write("%s" % t)
 
 def getTimeFile():
     try:
-        with open("lastrun.txt", mode="r") as file:
+        with open(getConfig.getConfig().lastrun, mode="r") as file:
             lastrun = file.read().replace('\n', '')
         file.close()
         logging.debug("Last run time from file: {}".format(lastrun))
@@ -82,17 +83,15 @@ def printTime():
     t = t[:-8] + "Z"    
 
 def writePreviouslyProcessedUserStores(USList):
-    conf = getConfig.getConfig()
-    with open(conf.storylog, mode="a") as file:
+    with open(getConfig.getConfig().storylog, mode="a") as file:
         for us in USList:
             file.write(us)
             file.write("\n")
 
 def readPreviouslyProcessedUserStories():
     previousUS = set()
-    conf = getConfig.getConfig()
     try:
-        with open(conf.storylog, mode="r") as file:
+        with open(getConfig.getConfig().storylog, mode="r") as file:
             line = file.read()
             line = line.split()
         for x in line:
@@ -106,7 +105,6 @@ def Cleanup(search_criteria):
     # Debug, clean up after testing
     logging.debug("Searching clenaup routine. Search Criteria is: {}".format(search_criteria))
     processedUserStories = readPreviouslyProcessedUserStories()
-    conf = getConfig.getConfig()
     
     collection = rally.get('Story', fetch=True, query=search_criteria)
     assert collection.__class__.__name__ == 'RallyRESTResponse'
@@ -121,7 +119,7 @@ def Cleanup(search_criteria):
                 processedUserStories.remove(userStory["FormattedID"])
 
     # Overwrite previous Storage file
-    with open(conf.storylog, mode="w") as file:
+    with open(getConfig.getConfig().storylog, mode="w") as file:
         for us in processedUserStories:
             file.write(us)
             file.write("\n")
@@ -157,10 +155,9 @@ def loop():
 
 def main(args):
     print ("Starting Rally2ALC")
-    conf = getConfig.getConfig()
     while True:
         loop()
-        time.sleep(conf.interval * 60)
+        time.sleep(getConfig.getConfig().interval * 60)
 
     print("Finished Processing")
 
