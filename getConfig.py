@@ -26,4 +26,15 @@ class getConfig:
         section = "Rally2ALC"
         self.interval = int(conf.get(section, "Run Interval"))
         self.runcleanup = conf.getboolean(section, "Run Cleanup")
-        self.storylog = conf.get(section, "Story Log Filename")        
+        self.logsfolder = conf.get(section, "Logs Folder")
+        self.storylog = conf.get(section, "Story Log Filename")
+        self.lastrun = conf.get(section, "lastrun.txt")
+        self.logfile = conf.get(section, "logfile")
+
+        if not self.logsfolder.endswith("/"):
+            self.logsfolder += "/"              #used to ensure the folder path will work.
+
+        # Adjust names to include path.
+        self.storylog = self.logsfolder + self.storylog
+        self.lastrun = self.logsfolder + self.lastrun
+        self.logfile = self.logsfolder + self.logfile
