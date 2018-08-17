@@ -1,0 +1,8 @@
+certifi==2018.8.13
+chardet==3.0.4
+idna==2.7
+pyral==1.4.2
+pytz==2018.5
+requests==2.19.1
+six==1.11.0
+urllib3==1.23
