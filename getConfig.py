@@ -8,7 +8,7 @@ class getConfig:
     def loadConfig(self):
         try:
             conf = configparser.ConfigParser()
-            conf.read('config.ini')
+            conf.read('./config/config.ini')
         except Exception:
             print("Config File not found.  Set config file and try again")
             sys.exit(1)
